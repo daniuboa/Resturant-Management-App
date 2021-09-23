@@ -4,20 +4,47 @@
 
 <form action="#" style=" padding: 50px; margin: 20px;">
   <div class="container">
-    <input type="text" placeholder="Enter Name...">
-    <input type="email" placeholder="Enter Email...">
-    <input type="password" placeholder="Enter Password...">
+    <input type="text" v-model="name" placeholder="Enter Name...">
+    <input type="email" v-model="email" placeholder="Enter Email...">
+    <input type="password" v-model="password" placeholder="Enter Password...">
 
     <div class="clearfix">
-      <button type="submit" classs="signupbtn">Sign Up</button>
+      <button v-on:click="signUp" type="submit" classs="signupbtn">Sign Up</button>
     </div>
   </div>
 </form>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     name: 'Sign Up',
+
+    data() {
+      return {
+        name: '', 
+        email: '',
+        password: ''
+      }
+    },
+    methods: {
+      async signUp()
+      {
+        let result = await axios.post("http://localhost:3000/users",{
+          email: this.email,
+          password: this.password,
+          name: this.name,
+        });
+
+        console.warn(result);
+        if(result.status==201)
+        {
+          
+          localStorage.setItem("user-info",JSON.stringify(result.data))
+          this.$router.push({name:"Home"})
+        }
+      }
+    }
 }
 </script>
 
